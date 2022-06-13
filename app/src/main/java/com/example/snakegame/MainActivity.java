@@ -30,40 +30,16 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
 
     private SurfaceView surfaceView;
     private TextView scoreTV;
-
-
     private SurfaceHolder surfaceHolder;
-
-
-
     private String movingPosition = "right";
-
-
     private int score = 0;
-
-
-
     private static final int pointSize = 28 ;
-
-
     private static final int defaultTalePoints = 3;
-
-
     private static final int snakeColor = Color.YELLOW;
-
-
     private static final int snakeMovingSpeed = 800;
-
-
     private int positionX = 0, positionY = 0;
-
-
     private Timer timer;
-
-
     private Canvas canvas = null;
-
-
     private Paint pointColor = null;
 
     @Override
@@ -71,25 +47,19 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         surfaceView = findViewById(R.id.surfaceView);
         scoreTV = findViewById(R.id.scoreTV);
-
 
         final AppCompatImageButton topBtn = findViewById(R.id.topBtn);
         final AppCompatImageButton leftBtn = findViewById(R.id.leftBtn);
         final AppCompatImageButton rightBtn = findViewById(R.id.rightBtn);
         final AppCompatImageButton bottomBtn = findViewById(R.id.bottomBtn);
 
-
         surfaceView.getHolder().addCallback(this);
 
         topBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
-
 
                 if(!movingPosition.equals("bottom")){
                     movingPosition = "top";
@@ -131,9 +101,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder surfaceHolder) {
 
-
         this.surfaceHolder = surfaceHolder;
-
 
         init();
 
@@ -151,42 +119,29 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
 
     private void init(){
 
-
         snakePointsList.clear();
 
-
         scoreTV.setText("0");
-
-
         score = 0;
-
 
         movingPosition ="right";
 
-
         int startPositionX = (pointSize) * defaultTalePoints;
 
-
         for(int i = 0; i < defaultTalePoints; i++){
-
 
             SnakePoints snakePoints = new SnakePoints(startPositionX, pointSize);
             snakePointsList.add(snakePoints);
 
-
             startPositionX = startPositionX - (pointSize * 2);
         }
 
-
         addPoint();
-
-
         moveSnake();
 
     }
 
     private void addPoint(){
-
 
         int surfaceWidth = surfaceView.getWidth() - (pointSize * 2);
         int surfaceHeight = surfaceView.getHeight() - (pointSize * 2);
@@ -214,26 +169,19 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
             @Override
             public void run() {
 
-
                 int headPositionX = snakePointsList.get(0).getPositionX();
                 int headPositionY = snakePointsList.get(0).getPositionY();
 
-
                 if (headPositionX == positionX && positionY == headPositionY){
 
-
                     growSnake();
-
 
                     addPoint();
                 }
 
 
-
                 switch (movingPosition){
                     case "right":
-
-
 
                         snakePointsList.get(0).setPositionX(headPositionX + (pointSize * 2));
                         snakePointsList.get(0).setPositionY(headPositionY);
@@ -241,13 +189,11 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
 
                     case "left":
 
-
                         snakePointsList.get(0).setPositionX(headPositionX - (pointSize * 2));
                         snakePointsList.get(0).setPositionY(headPositionY);
                         break;
 
                     case "top":
-
 
                         snakePointsList.get(0).setPositionX(headPositionX);
                         snakePointsList.get(0).setPositionY(headPositionY - (pointSize * 2));
@@ -256,20 +202,16 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
 
                     case "bottom":
 
-
                         snakePointsList.get(0).setPositionX(headPositionX);
                         snakePointsList.get(0).setPositionY(headPositionY + (pointSize * 2));
                         break;
                 }
-
-
 
                 if (checkGameOver(headPositionX, headPositionY)){
 
 
                     timer.purge();
                     timer.cancel();
-
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                     builder.setMessage("Your Scare = "+score);
@@ -279,11 +221,9 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
 
-
                             init();
                         }
                     });
-
 
                      runOnUiThread(new Runnable() {
                          @Override
@@ -295,37 +235,28 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
 
                 else{
 
-
                     canvas = surfaceHolder.lockCanvas();
-
 
                     canvas.drawColor(Color.WHITE, PorterDuff.Mode.CLEAR);
 
-
                     canvas.drawCircle(snakePointsList.get(0).getPositionX(), snakePointsList.get(0).getPositionY(), pointSize, createPointColor());
 
-
                     canvas.drawCircle(positionX, positionY, pointSize, createPointColor());
-
 
                     for (int i =1; i < snakePointsList.size(); i++){
 
                         int getTempPositionX = snakePointsList.get(i).getPositionX();
                         int getTempPositionY = snakePointsList.get(i).getPositionY();
 
-
                         snakePointsList.get(i).setPositionX(headPositionX);
                         snakePointsList.get(i).setPositionY(headPositionY);
                         canvas.drawCircle(snakePointsList.get(i).getPositionX(), snakePointsList.get(i).getPositionY(), pointSize, createPointColor());
-
 
                         headPositionX = getTempPositionX;
                         headPositionY = getTempPositionY;
                     }
 
-
                     surfaceHolder.unlockCanvasAndPost(canvas);
-
                 }
             }
         }, 1000-snakeMovingSpeed, 1000-snakeMovingSpeed);
@@ -333,15 +264,10 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
 
     private void growSnake(){
 
-
         SnakePoints snakePoints = new SnakePoints(0,0);
 
-
         snakePointsList.add(snakePoints);
-
-
         score++;
-
 
         runOnUiThread(new Runnable() {
             @Override
@@ -354,7 +280,6 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
     private boolean checkGameOver(int headPositionX, int  headPositionY){
         boolean gameOver = false;
 
-
         if (snakePointsList.get(0).getPositionX() < 0 ||
                 snakePointsList.get(0).getPositionY() < 0 ||
                 snakePointsList.get(0).getPositionX() >= surfaceView.getWidth() ||
@@ -364,7 +289,6 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
             gameOver = true;
         }
         else {
-
 
             for (int i = 1; i < snakePointsList.size(); i++){
 
@@ -381,7 +305,6 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
     }
 
     private Paint createPointColor(){
-
 
        if(pointColor == null){
            pointColor = new Paint();

@@ -42,11 +42,11 @@ public class MainActivity3 extends AppCompatActivity {
 
         class Game implements Runnable {
 
-            // 變數區
-            int in = 0; // 輸入值
-            int min = 1; // 最小值
-            int max = 99; // 最大值
-            int time = 0; // 猜測次數
+
+            int in = 0;
+            int min = 1;
+            int max = 99;
+            int time = 0;
 
             @Override
             public void run() {
@@ -54,12 +54,12 @@ public class MainActivity3 extends AppCompatActivity {
                     @Override
                     public void run() {
 
-                        // 初始值
-                        in = 0; // 輸入值
-                        min = 1; // 最小值
-                        max = 99; // 最大值
-                        time = 0; // 猜測次數
-                        input.setText(""); // 清空輸入
+
+                        in = 0;
+                        min = 1;
+                        max = 99;
+                        time = 0;
+                        input.setText("");
 
                         runOnUiThread(new Runnable() {
 
@@ -69,12 +69,12 @@ public class MainActivity3 extends AppCompatActivity {
                                 hint.setText("提示訊息：請輸入 " + min + "～" + max + " 的數字");
                                 times.setText("猜測次數：" + time);
                                 input.setInputType(InputType.TYPE_CLASS_NUMBER);
-                                submit.setEnabled(true); // 啟用按鈕
+                                submit.setEnabled(true);
 
                             }
                         });
 
-                        // 讀取歷史最佳記錄
+
                         String getRecord = getSharedPreferences("record", MODE_PRIVATE)
                                 .getString("times", "");
                         if (getRecord.equals("")) {
@@ -84,11 +84,11 @@ public class MainActivity3 extends AppCompatActivity {
                             rec = Integer.parseInt(getRecord);
                         }
 
-                        // 隨機生成 1~99 數字作為遊戲目標猜測值
+
                         ranNum = (int) (Math.random() * 99 + 1);
                         Log.v("ANS", "答案：" + ranNum);
 
-                        // 送出按鈕監聽
+
                         submit.setOnClickListener(
                                 new View.OnClickListener() {
                                     @Override
@@ -100,14 +100,14 @@ public class MainActivity3 extends AppCompatActivity {
 
                                         } else {
 
-                                            // 輸入值載入
+
                                             in = Integer.parseInt(input.getText().toString());
 
-                                            // 清空輸入
+
                                             input.setText("");
 
-                                            // 判斷區
-                                            if (in <= max && in >= min) { // 輸入值介於最大至最小可能值內
+
+                                            if (in <= max && in >= min) {
                                                 if (in > ranNum) {
                                                     max = in;
                                                     hint.setText("提示訊息：請輸入 " + min + "～" + max + " 的數字");
@@ -120,7 +120,7 @@ public class MainActivity3 extends AppCompatActivity {
                                                     time++;
                                                     hint.setText("恭喜猜中數字「" + ranNum + "」！您只花了 " + time + " 次就完成了！");
                                                     submit.setEnabled(false);
-                                                    // 判斷是否寫入歷史最佳記錄
+
                                                     if (time < rec) {
                                                         rec = time;
                                                         SharedPreferences editRecord = getSharedPreferences("record", MODE_PRIVATE);
@@ -135,7 +135,7 @@ public class MainActivity3 extends AppCompatActivity {
                                                 time++;
                                             }
 
-                                            // 寫入次數
+
                                             times.setText("猜測次數：" + time);
 
                                         }
@@ -155,7 +155,6 @@ public class MainActivity3 extends AppCompatActivity {
         Game game = new Game();
         game.run();
 
-        // 下拉重新載入
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -168,8 +167,6 @@ public class MainActivity3 extends AppCompatActivity {
 
     }
 
-    // 右上選單實作
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -179,16 +176,12 @@ public class MainActivity3 extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        // 按下「刪除記錄」後的動作
         if (id == R.id.record_delete) {
-            // 更新畫面顯示記錄
             record.setText("歷史最佳記錄：無");
-            // 清空記錄值
             SharedPreferences editRecord = getSharedPreferences("record", MODE_PRIVATE);
             editRecord.edit()
                     .putString("times", "")
                     .apply();
-            // 建立提示訊息
             Toast.makeText(this, "記錄已刪除", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.give_up) {
             hint.setText("放棄遊戲！答案是「"+ ranNum +"」");
